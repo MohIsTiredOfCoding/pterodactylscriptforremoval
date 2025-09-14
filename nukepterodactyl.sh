@@ -21,15 +21,6 @@ rm -rf /var/www/pterodactyl
 echo ">>> Removing Wings files..."
 rm -rf /etc/pterodactyl /var/lib/pterodactyl /var/log/pterodactyl
 
-echo ">>> Removing ALL Certbot/Let's Encrypt certificates..."
-rm -rf /etc/letsencrypt /var/lib/letsencrypt /var/log/letsencrypt
-
-echo ">>> Removing Certbot and its repositories..."
-apt-get purge -y certbot python3-certbot* 2>/dev/null
-rm -f /etc/apt/sources.list.d/*certbot*.list
-rm -f /etc/apt/sources.list.d/*letsencrypt*.list
-add-apt-repository -y --remove ppa:certbot/certbot 2>/dev/null || true
-
 echo ">>> Dropping Pterodactyl database and user..."
 mysql -u root -p$MYSQL_PASS -e "DROP DATABASE IF EXISTS panel;" 2>/dev/null
 mysql -u root -p$MYSQL_PASS -e "DROP USER IF EXISTS 'pterodactyl'@'127.0.0.1';" 2>/dev/null
@@ -61,11 +52,6 @@ apt-get purge -y nginx nginx-common nginx-full apache2 apache2-bin apache2-utils
 apt-get autoremove -y
 rm -rf /etc/nginx /var/log/nginx /var/www/html
 rm -rf /etc/apache2 /var/log/apache2
-
-echo ">>> Cleaning up apt sources (removing extra repos)..."
-rm -f /etc/apt/sources.list.d/*ondrej*.list
-rm -f /etc/apt/sources.list.d/*docker*.list
-rm -f /etc/apt/sources.list.d/*pterodactyl*.list
 
 echo ">>> Updating apt..."
 apt-get update
